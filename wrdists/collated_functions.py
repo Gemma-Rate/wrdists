@@ -5,10 +5,8 @@ import astropy.coordinates as co
 import numpy as np
 import astropy.units as u
 import pandas as pd
-import bayesian_functions as bc
+import wrdists.bayesian_functions as bc
 import matplotlib.pyplot as plt
-import absolute_magnitude_functions as mg
-
 
 def from_decimal(ra, dec):
     """
@@ -558,70 +556,3 @@ def gaia_flag(par, parerr, ast):
         # All good parameters.  
 
     return flagstr
-
-def abs_mag_distribution_single(pars, parserr, phots, ra, dec, ast, name, A, A_err,
-                                v, v_err, plot_dist=False):
-    """
-    Calculate the distribution of absolute magnitudes, based on the distance
-
-    :return:
-    """
-
-    """Get distance distribution"""
-
-    dists, interval, height, height_interval, flag, failure_dist, wr_dist = run_dist_single(pars,
-                                                                   parserr,
-                                                                   phots, ra,
-                                                                   dec, ast,
-                                                                   name,
-                                                                   plot_image=plot_dist)
-
-    """Calculate M"""
-
-    a_dist = mg.create_gaussian_dist(A, A_err)
-    m_dist = mg.create_gaussian_dist(v, v_err)
-    wr_dist.dist = wr_dist.dist / np.sum(wr_dist.dist)
-    # Renormalise distance distribution if it is not quite exactly 1.
-    # Use sum for probabilities.
-
-    dist_p, bcent, M_opt, Mtot, mode, err, fit_dist, row_used = mg.abs_mag_calculate(m_dist, \
-                                                                                     wr_dist,
-                                                                                     a_dist,
-                                                                                     name)
-    uperr, lowerr = err[1], err[0]
-    # Get upper and lower bounds.
-
-    if uperr < lowerr:
-        lowerr, uperr = uperr, lowerr
-        # Swap values around if they are the wrong way.
-
-    # Results suitable for plotting (no np.nan).
-    """Plot image"""
-    if plot_dist:
-        M = m_dist.dpt - 5 * (np.log10(wr_dist.maxr) - 1) - a_dist.dpt
-        mg.plot_results_fits(name, bcent, dist_p, mode, row_used, fit_dist,
-                             M_opt, Mtot, M)
-
-    return mode, uperr, lowerr
-
-
-def abs_mag_distributions(pars, parserrs, phots, ras, decs, asts, names, As, A_errs,
-                          ms, m_errs, plot_dist=False):
-    Mlist, Muperr, Mlowerr = [], [], []
-    # Store modes of absolute magnitude distributions.
-
-    for i in range(len(pars)):
-        try:
-            mode, uperr, lowerr = abs_mag_distribution_single(pars[i], parserrs[i], phots[i],
-                                                           ras[i], decs[i], asts[i], names[i],
-                                                           As[i], A_errs[i], ms[i], m_errs[i],
-                                                           plot_dist=plot_dist)
-        except ValueError:
-            mode = np.nan
-            uperr = np.nan
-            lowerr = np.nan
-        Mlist.append(mode)
-        Muperr.append(uperr)
-        Mlowerr.append(lowerr)
-
-    return Mlist, Muperr, Mlowerr

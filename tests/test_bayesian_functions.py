@@ -4,9 +4,9 @@ import bayesian_cal as bc
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
-import wrapper_functions as wp
+import wrdists.collated_functions as cf
 
-class TestDistrib(unittest.TestCase):
+class DistribTestCase(unittest.TestCase):
     """
     Test all functions associated with the bayesian Distribution object
     in bayesian_cal.py
@@ -167,7 +167,7 @@ class TestDistrib(unittest.TestCase):
         wr_dist.dpt, wr_dist.err = wr_dist.dpt*1e-3, wr_dist.err*1e-3
         # Make data mas scale...
     
-        l, b = wp.conv_to_galactic(180, 0)
+        l, b = cf.conv_to_galactic(180, 0)
 
         n, nl, nb, sig, mu = wr_dist.hii_numbers(l, b)
         # Run depending on HII regions along line of sight. 
