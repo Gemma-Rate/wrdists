@@ -15,3 +15,6 @@ The code can be accessed either through the command line (to calculate distances
 
 ## Dependencies
 
+## Attribution 
+If you have found this code useful, then please cite it as Rate & Crowther, 2020 (MNRAS, 493, 1512).
+
