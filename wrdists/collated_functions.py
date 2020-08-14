@@ -5,7 +5,7 @@ import astropy.coordinates as co
 import numpy as np
 import astropy.units as u
 import pandas as pd
-import wrdists.bayesian_functions as bc
+import bayesian_functions as bc
 import matplotlib.pyplot as plt
 
 def from_decimal(ra, dec):
@@ -268,7 +268,7 @@ def create_cs(ra, dec):
     return ra_new, dec_new, cs_list
 
 def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True, 
-             md=300, zpt=-0.029, err_sig=0.68, plot_image=False):
+             md=300, zpt=-0.029, err_sig=0.68, plot_image=False, save_distributions=False):
     """
     Get all distances for a list of objects using bayesian method.
 
@@ -288,6 +288,12 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
         Astrometric excess noise.    
     md : int
         Minimum distance for the prior in pc. Default=300pc.
+    zpt : float
+        Apply zero point correction to parallaxes. Default=-0.029mas.
+    err_sig : float (0-1)
+        Specify the region of credible interval. Default=0.68, 1 sigma (e.g alternative 0.95=2 sigma).
+    plot_image : bool
+        Plot the output image distribution of the prior and posterior.
         
     Returns
     ----------
@@ -301,8 +307,9 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
         Flags applied to data. 
     """
     
-    dists, upper, lower, heights, heights_upper, heights_lower, flags, omega, omega_err = [], [], [], [], [], [], [], \
-                                                                                          [], []
+    max_dist, upper, lower, heights, heights_upper, heights_lower, flags, omega, omega_err = [], [], [], [], [], [], \
+                                                                                             [], [], []
+
     for i in range(len(pars)):
 
         maximum_r, interval, height, height_interval, flagstr, fail, distribution = run_dist_single(pars[i], \
@@ -311,7 +318,7 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
                                                      name[i], wdust=wdust,
                                                      werr=werr, md=md,
                                                      plot_image=plot_image)
-        dists.append(maximum_r)
+        max_dist.append(maximum_r)
         upper.append(interval[1]), lower.append(interval[0])
         flags.append(flagstr)
 
@@ -319,12 +326,19 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
         heights_upper.append(height_interval[1])
         heights_lower.append(height_interval[0])
 
+        if save_distributions:
+            fname = save_distributions + '\\' + name[i] + '_posterior.csv'
+            save_dist_dict = {'Distance (pc)': distribution.r_range, 'Probability': distribution.dist}
+            # Obtain distribution distance range and normalized posterior.
+            df = pd.DataFrame(data=save_dist_dict)
+            df.to_csv(fname, index=False)
+
         if werr:
             omega.append(distribution.dpt*1e3)
             omega_err.append(distribution.err*1e3)
 
 
-    return np.array(dists), np.array(upper), np.array(lower), np.array(heights), np.array(heights_upper), \
+    return np.array(max_dist), np.array(upper), np.array(lower), np.array(heights), np.array(heights_upper), \
            np.array(heights_lower), omega, omega_err, flags
 
 

@@ -4,12 +4,12 @@ import setuptools
 
 setuptools.setup(
     name='wrdists',
-    entry_points={'console_scripts': ['wrdists = scripts.console_access:cli_main']},
+    scripts=['wrdists/scripts/console_access'],
     url='https://github.com/Gemma-Rate/wrdists',
     author='Gemma Rate',
     author_email='gemma.rate@gmail.com',
     install_requires=['numpy', 'astropy', 'matplotlib', 'pandas'],
-    packages=setuptools.find_packages(),
+    packages=['wrdists','wrdists.test'],
     version='1.0',
     license='MIT',
     description='Calculates Galactic WR distances from Gaia DR2 parallaxes',
