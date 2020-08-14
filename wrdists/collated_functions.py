@@ -5,7 +5,7 @@ import astropy.coordinates as co
 import numpy as np
 import astropy.units as u
 import pandas as pd
-import bayesian_functions as bc
+import wrdists.bayesian_functions as bc
 import matplotlib.pyplot as plt
 
 def from_decimal(ra, dec):
