@@ -22,7 +22,7 @@ Aft
 can be run directly from the command line. For example, for WR1:
 ```> wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1```
 
-It's also possible to load in the data from a file. Here, instead of entering the values directly, enter the numbers of the columns you are loading from. For example, from this file:
+It's also possible to load in the data from a file. Here, instead of entering the values directly, enter the numbers of the columns you are loading from, as well as the path to load from/save to. For example, from this file (test.csv):
 | WR number | Gaia parallax (mas) | Parallax err (mas) | G (mag) | Gaia RA (deg) | Gaia DEC (deg) | Astrometric excess noise (mas) |
 |:---------:|:-------------------:|:------------------:|:-------:|:-------------:|:--------------:|:------------------------------:|
 | WR1       | 0.285               | 0.032              | 9.79    |               |                |                                |
