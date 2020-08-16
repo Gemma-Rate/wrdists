@@ -18,36 +18,58 @@ installing into a python virtual environment
 
 ### Command line
 
-Aft
-can be run directly from the command line. For example, for WR1:
+After installation, wrdists can be run directly from the command line. For example, for WR1 (where > is the command line cursor):
 ```> wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1```
+
+This will produce the following output:
+
+
+
 
 It's also possible to load in the data from a file. Here, instead of entering the values directly, enter the numbers of the columns you are loading from, as well as the path to load from/save to. For example, from this file (test.csv):
 | WR number | Gaia parallax (mas) | Parallax err (mas) | G (mag) | Gaia RA (deg) | Gaia DEC (deg) | Astrometric excess noise (mas) |
 |:---------:|:-------------------:|:------------------:|:-------:|:-------------:|:--------------:|:------------------------------:|
-| WR1       | 0.285               | 0.032              | 9.79    |               |                |                                |
-| WR2       |                     |                    | 11.00   |               |                |                                |
+| WR1       | 0.285               | 0.032              | 9.79    | 10.868        |                |            0                   |
+| WR2       |                     |                    | 11.00   | 16.346        |                |           0.27                 |
 | WR3       | 0.313               | 0.041              | 10.58   |               |                |                                |
-| WR4       | 0.229               | 0.041              | 9.68    |               |                |                                |
+| WR4       | 0.229               | 0.041              | 9.68    |               |                |           0.06                 |
+
+This code will load 
+and save the distance data into the file test_2.csv at the path specified.
+
+```> wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout directorypath\test2.csv``` 
+
+
 
 #### Required arguments
 
+-p Gaia DR2 parallax (mas) or column number.\
+-pe Uncertainty of Gaia DR2 parallax (mas) or column number.\
+-g Gaia G band magnitude (mag) or column number.\
+-ra Gaia Right Ascension (deg) or column number.\
+-dec Gaia Declination (dec) or column number.\
+-ast Gaia Astrometric excess noise (mas) or column number.\
+-n Star name or column number.
+
+Also required when loading data from a file:
+
+-fin File path to load csv containing data.
+-fout File path to save new csv with distances. 
 
 
+#### Optional arguments
+
+-zpt Set the zero point of the parallaxes (mas) (default = -0.029 mas).
 
 
 ### Imported into another program
 
-For instance, to access the bayesian distribution class, import as:
+It is possible to use the model as part of another code. For instance, to access the bayesian distribution class, import as:
 ```import wrdists.bayesian_functions as bc```
-
-## Example outputs
 
 ## Dependencies
 
 ## Attribution and acknowledgements
 If you have found this code useful, then please cite it as [Rate & Crowther, 2020 (MNRAS, 493, 1512)](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.1512R/abstract).
 
-This 
-uses data from the Gaia DR2 
-
+This work has made use of data from the European Space Agency (ESA) mission Gaia ([https://www.cosmos.esa.int/gaia] (https://www.cosmos.esa.int/gaia)), processed by the Gaia Data Processing and Analysis Consortium (DPAC, [https://www.cosmos.esa.int/web/gaia/dpac/consortium](https://www.cosmos.esa.int/web/gaia/dpac/consortium)). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the Gaia Multilateral Agreement.
