@@ -23,20 +23,20 @@ After installation, wrdists can be run directly from the command line. For examp
 
 This will produce the following output:
 
-##############################
-Distribution for WR1
-##############################
-Distance: 3152 pc
-Upper interval: +463 pc (3615 pc)
-Lower interval: -360 pc (2792 pc)
-Flags for distance:  g
+############################## \
+Distribution for WR1 \
+############################## \
+Distance: 3152 pc \
+Upper interval: +463 pc (3615 pc) \
+Lower interval: -360 pc (2792 pc) \
+Flags for distance:  g \
 
-Distance from plane (|z|): 125.39 pc
-|z| upper bound: 140.75 pc
-|z| lower bound: 113.44 pc
+Distance from plane (|z|): 125.39 pc \
+|z| upper bound: 140.75 pc \
+|z| lower bound: 113.44 pc \
 
-Omega (zero point corrected parallax): 0.3140 mas
-Sigma omega (increased error): 0.0399 mas
+Omega (zero point corrected parallax): 0.3140 mas \
+Sigma omega (increased error): 0.0399 mas \
 
 
 It's also possible to load in the data from a file. Here, instead of entering the values directly, enter the numbers of the columns you are loading from, as well as the path to load from/save to. For example, from this file (test.csv):
