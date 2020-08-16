@@ -55,29 +55,29 @@ The star names are in the first column and so -n is set to zero (python indexing
 
 #### Required arguments
 
--p Parallax (mas) or column number.\
--pe Uncertainty of parallax (mas) or column number.\
--g *Gaia* G band magnitude (mag) or column number.\
--ra Right Ascension (deg) or column number.\
--dec Declination (dec) or column number.\
--ast *Gaia* Astrometric excess noise (mas) or column number.\
--n Star name or column number.
+-p   Parallax (mas) or column number.\
+-pe   Uncertainty of parallax (mas) or column number.\
+-g   *Gaia* G band magnitude (mag) or column number.\
+-ra   Right Ascension (deg) or column number.\
+-dec   Declination (deg) or column number.\
+-ast   *Gaia* Astrometric excess noise (mas) or column number.\
+-n Star   name or column number.
 
 Also required when loading data from a file:
 
--fin File path to load csv containing data.
--fout File path to save new csv with distances. 
+-fin   File path to load csv containing data.
+-fout   File path to save new csv with distances. 
 
 
 #### Optional arguments
 
--zpt Set the zero point of the parallaxes (mas) (default = -0.029 mas).\
--md Set the minimum distance of the prior (pc), below which the probability is zero (default = 300pc). \
--es Set the credible interval coverage range (default = 0.68). \
--pt Plot the output distributions of the prior, likelihood and posterior, along with the credible intervals (uncertainty bounds) and most likely distance. The input string should be the path to save the plotted image(s) (default = False). \
--dist Saves the posterior distance distribution as a csv which can be loaded and used in another python program. The input string should be the path to save the distribution data. (default = False). \
--ed Include to exclude dust from the prior (use HII regions only), which may be useful to compare the effects of different priors. \
--ee Include to disregard resizing of parallax errors (compared to external catalogues, [Arenou et al. 2018](https://ui.adsabs.harvard.edu/abs/2018A%26A...616A..17A/abstract)) and zero point correction. May be useful for data comparison or application to non Gaia parallaxes (e.g Hipparcos) (default = False).
+-zpt   Set the zero point of the parallaxes (mas) (default = -0.029 mas).\
+-md   Set the minimum distance of the prior (pc), below which the probability is zero (default = 300pc). \
+-es   Set the credible interval coverage range (default = 0.68). \
+-pt   Plot the output distributions of the prior, likelihood and posterior, along with the credible intervals (uncertainty bounds) and most likely distance. The input string should be the path to save the plotted image(s) (default = False). \
+-dist   Saves the posterior distance distribution as a csv which can be loaded and used in another python program. The input string should be the path to save the distribution data. (default = False). \
+-ed   Include to exclude dust from the prior (use HII regions only), which may be useful to compare the effects of different priors. \
+-ee   Include to disregard resizing of parallax errors (compared to external catalogues, [Arenou et al. 2018](https://ui.adsabs.harvard.edu/abs/2018A%26A...616A..17A/abstract)) and zero point correction. May be useful for data comparison or application to non Gaia parallaxes (e.g Hipparcos) (default = False).
 
 For data loading: 
 
