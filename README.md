@@ -58,12 +58,12 @@ The star names are in the first column and so -n is set to zero (python indexing
 -ra       Right Ascension (deg) or number of the column containing RA.
 -dec      Declination (deg) or number of the column containing DEC.
 -ast      Gaia Astrometric excess noise (mas) or number of the column containing astrometric excess noises.
--n Star   Star name or number of the column containing names of the stars.
+-n        Star name or number of the column containing names of the stars.
 ```
 Also required when loading data from a file:
 ```
--fin      File path to load csv containing data.
--fout     File path to save new csv with distances. 
+-fin      File path to load data.
+-fout     File path to save new data with distances. 
 ```
 
 #### Optional arguments
