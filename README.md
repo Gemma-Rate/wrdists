@@ -7,18 +7,16 @@ Further methodology information is available our publication outlined above.
 
 The code can be accessed either through the command line (to calculate distances without modifying the internal processes), or imported into your own python program.
 
----
-
 ## Installation
 
-Installation requires python and uses pip direct from this github page. 
+Installation uses pip direct from this github page. 
 installing into a python virtual environment
 
 ## Useage
 
 ### Command line
 
-After installation, wrdists can be run directly from the command line. For example, for WR1 (where > is the command line cursor):
+After installation, wrdists can be run directly from the command line. For example, for WR1 (where > is the command line cursor):  
 ```> wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1```
 
 This will produce the following output:
@@ -47,43 +45,48 @@ It's also possible to load in the data from a file. Here, instead of entering th
 | WR3       | 0.313               | 0.041              | 10.58   | 24.732        |  58.156        |           0.10                 |
 | WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 |
 
-This code will load data from test.csv and save the distance data into the file test_2.csv at the path specified.
-
+This code will load data from test.csv and save the distance data into the file test_2.csv at the path specified.  
 ```> wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv``` 
 
 The star names are in the first column and so -n is set to zero (python indexing). The parallax is the second column, and so -p has value 1 and so on. 
 
 #### Required arguments
-
--p   Parallax (mas) or column number.\
--pe   Uncertainty of parallax (mas) or column number.\
--g   *Gaia* G band magnitude (mag) or column number.\
--ra   Right Ascension (deg) or column number.\
--dec   Declination (deg) or column number.\
--ast   *Gaia* Astrometric excess noise (mas) or column number.\
--n Star   name or column number.
-
+```
+-p        Parallax (mas) or number of the column containing parallaxes.
+-pe       Uncertainty of parallax (mas) or number of the column containing parallax uncertainties.
+-g        Gaia G band magnitude (mag) or number of the containing G magnitudes.
+-ra       Right Ascension (deg) or number of the column containing RA.
+-dec      Declination (deg) or number of the column containing DEC.
+-ast      Gaia Astrometric excess noise (mas) or number of the column containing astrometric excess noises.
+-n Star   Star name or number of the column containing names of the stars.
+```
 Also required when loading data from a file:
-
--fin   File path to load csv containing data.
--fout   File path to save new csv with distances. 
-
+```
+-fin      File path to load csv containing data.
+-fout     File path to save new csv with distances. 
+```
 
 #### Optional arguments
-
--zpt   Set the zero point of the parallaxes (mas) (default = -0.029 mas).\
--md   Set the minimum distance of the prior (pc), below which the probability is zero (default = 300pc). \
--es   Set the credible interval coverage range (default = 0.68). \
--pt   Plot the output distributions of the prior, likelihood and posterior, along with the credible intervals (uncertainty bounds) and most likely distance. The input string should be the path to save the plotted image(s) (default = False). \
--dist   Saves the posterior distance distribution as a csv which can be loaded and used in another python program. The input string should be the path to save the distribution data. (default = False). \
--ed   Include to exclude dust from the prior (use HII regions only), which may be useful to compare the effects of different priors. \
--ee   Include to disregard resizing of parallax errors (compared to external catalogues, [Arenou et al. 2018](https://ui.adsabs.harvard.edu/abs/2018A%26A...616A..17A/abstract)) and zero point correction. May be useful for data comparison or application to non Gaia parallaxes (e.g Hipparcos) (default = False).
-
+```
+-zpt      Set the zero point of the parallaxes (mas) (default = -0.029 mas).
+-md       Set the minimum distance of the prior (pc), below which the probability is zero (default = 300pc). 
+-es       Set the credible interval coverage range (default = 0.68). 
+-pt       Plot the output distributions of the prior, likelihood and posterior, along with the credible intervals 
+          (uncertainty bounds) and most likely distance. The input string should be the path to save the plotted 
+          image(s) (default = False). 
+-dist     Saves the posterior distance distribution as a csv which can be loaded and used in another python 
+          program. The input string should be the path to save the distribution data. (default = False). 
+-ed       Include to exclude dust from the prior (use HII regions only), which may be useful to compare the 
+          effects of different priors. 
+-ee       Include to disregard resizing of parallax errors (compared to external catalogues, Arenou et al. 2018) 
+          and zero point correction. May be useful for data comparison or application to non Gaia parallaxes 
+          (e.g Hipparcos) (default = False).
+```
 For data loading: 
-
--ph Include if the file input contains a header, to avoid issues with loading data. \
--dmt Specify a delimiter for the input file (default = ',').
-
+```
+-ph       Include if the file input contains a header, to avoid issues with loading data. \
+-dmt      Specify a delimiter for the input file (default = ',').
+```
 
 ### Imported into another program
 
@@ -93,6 +96,7 @@ To access the bayesian distribution class, import as:
 ## Dependencies
 
 Requires: 
+Python 3.0 or better. 
 
 ## Attribution and acknowledgements
 If you have found this code useful, then please cite it as [Rate & Crowther, 2020 (MNRAS, 493, 1512)](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.1512R/abstract).
