@@ -91,8 +91,7 @@ For data loading:
 
 ### Imported into another program
 
-To access the bayesian distribution class, import as:
-```import wrdists.bayesian_functions as bc```
+Import as ```wrdists.module```. E.g, to access the bayesian distribution class, use ```import wrdists.bayesian_functions as bc```.
 
 ## Dependencies
 
