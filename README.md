@@ -5,7 +5,7 @@ Our Bayesian prior is based on a combination of HII regions (to simulate massive
 
 Further methodology information is available our publication outlined above.
 
-The code can be accessed either through the command line (to calculate distances without modifying the internal processes), or imported into your own python program.
+The code can be accessed either through the command line, or imported into your own python program.
 
 ## Installation
 
