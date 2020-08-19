@@ -85,7 +85,7 @@ Also required when loading data from a file:
 ```
 For data loading: 
 ```
--ph       Include if the file input contains a header, to avoid issues with loading data. \
+-ph       Include if the file input contains a header, to avoid issues with loading data. 
 -dmt      Specify a delimiter for the input file (default = ',').
 ```
 
