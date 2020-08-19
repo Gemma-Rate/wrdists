@@ -9,15 +9,16 @@ The code can be accessed either through the command line (to calculate distances
 
 ## Installation
 
-Installation uses pip direct from this github page. 
-installing into a python virtual environment
+To install, clone or download the zip file containing the code into your python or virtual environment Lib folder. In the wrdists directory that is then created (which may be wrdists-master) and contains setup.py, run
+```pip install .```
+at the command line. This will install the module and any dependencies that may be missing. 
 
 ## Useage
 
 ### Command line
 
-After installation, wrdists can be run directly from the command line. For example, for WR1 (where > is the command line cursor):  
-```> wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1```
+After installation, wrdists can be run directly from the command line. For example, for WR1 run:  
+```wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1```
 
 This will produce the following output:
 ```
@@ -46,7 +47,7 @@ It's also possible to load in the data from a file. Here, instead of entering th
 | WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 |
 
 This code will load data from test.csv and save the distance data into the file test_2.csv at the path specified.  
-```> wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv``` 
+```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv``` 
 
 The star names are in the first column and so -n is set to zero (python indexing). The parallax is the second column, and so -p has value 1 and so on. 
 
@@ -95,8 +96,7 @@ To access the bayesian distribution class, import as:
 
 ## Dependencies
 
-Requires: 
-Python 3.0 or better. 
+Python 3.0 or newer. Matplotlib, Pandas, Astropy and Numpy modules.
 
 ## Attribution and acknowledgements
 If you have found this code useful, then please cite it as [Rate & Crowther, 2020 (MNRAS, 493, 1512)](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.1512R/abstract).
