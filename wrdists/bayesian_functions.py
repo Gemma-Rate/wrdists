@@ -219,6 +219,7 @@ class Distribution(object):
         intervals = [int_min[0], int_max[0]]
 
         return greater_n, greater_r, n, intervals
+          
 
     def correct_gaia(self, gphot, uwu=False, zpt=-0.029):
         """
@@ -238,12 +239,6 @@ class Distribution(object):
             Either Default is to apply global zero point of -0.029 from Gaia
             astrometric solution paper (Lindegren et al. 2018) or other float
             for user supplied zero point.
-
-        Returns
-        -------
-        sigma : array
-            1 sigma error on mode (63% credible interval).
-
         """
 
         self.dpt = (self.dpt - zpt) * 1e-3

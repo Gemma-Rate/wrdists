@@ -40,41 +40,43 @@ def main():
     """Optional arguments"""
 
     # Load in a list of results:
-    parser.add_argument('-fin', help='File path from which to load csv containing parameters when executing for \
-                                      lists of stars', action='store', dest='list_mode_fin', type=str, default=False)
-    parser.add_argument('-fout', help='File path to store csv ouput to when executing with a file input',
+    parser.add_argument('-fin', help='File path from which to load a file containing parameters when executing for \
+                                      lists of stars (str).', action='store', dest='list_mode_fin', type=str, default=False)
+    parser.add_argument('-fout', help='File path to store ouput to when executing with a file input (str).',
                         action='store', dest='list_mode_fout', type=str, default=False)
-    parser.add_argument('-ph', help='Preserve the header if the file input contains one',
+    parser.add_argument('-ph', help='Preserve the header if the file input contains one (no argument)',
                         action='store_true', dest='header', default=False)
-    parser.add_argument('-dmt', help='Specify a delimiter for the csv', action='store', dest='delimit', type=str,
+    parser.add_argument('-dmt', help='Specify a delimiter for the input file (str).', action='store', dest='delimit', type=str,
                         default=',')
+    parser.add_argument('-zpt_list', help='Specify the column number containing the zero points (if used) (int).', action='store', dest='zpt_list', type=int,
+                        default=False)                   
 
     # Other options:
     parser.add_argument('-zpt', help='Set the zero point of the parallaxes (mas) to an alternative value \
-                                     (default = -0.029 mas).',  action='store',  default=-0.029, type=float, dest='zpt')
+                                     (default = -0.029 mas) (float).',  action='store',  default=-0.029, type=float, dest='zpt')
     parser.add_argument('-md','--minimum_dist', help='Set the minimum distance of the prior (pc), which is useful for \
-                                                      constraining the prior.',  action='store', default=300, type=float,
+                                                      constraining the prior (float).',  action='store', default=300, type=float,
                                                       dest='md')
-    parser.add_argument('-es','--error_sigma', help='Set the credible interval coverage range.',  action='store',
+    parser.add_argument('-es','--error_sigma', help='Set the credible interval coverage range (float).',  action='store',
                                                default=0.68, type=float, dest='esig')
     # Save plots and/or posterior distribution:
     parser.add_argument('-pt', '--plot', help='Plot the output distributions of the prior, likelihood and posterior, \
                                                along with the credible intervals (uncertainty bounds) and most likely \
                                                distance (default = False). The input string should be the path to save \
-                                               the plotted image(s).', action='store', default=False, type=str,
+                                               the plotted image(s) (str).', action='store', default=False, type=str,
                                                dest='plot_data')
-    parser.add_argument('-dist', '--distribution', help='Saves the posterior distance distribution as a numpy array for '
+    parser.add_argument('-dist', '--distribution', help='Saves the posterior distance distribution as a csv '
                                                         'which can be loaded and used in another python program. The '
-                                                        'input string should be the path to save the distribution data.',
+                                                        'input string should be the path to save the distribution data (str).',
                                                         action='store', default=False, type=str, dest='save_distribution')
     # Exclude dust distribution or parallax resizing:
     parser.add_argument('-ed','--exclude_dust', help='Exclude dust from the prior (use HII regions only), which may be \
-                                                      useful to compare the effects of different priors (default = False).',
+                                                      useful to compare the effects of different priors (default = False) (no argument).',
                                                       action='store_true', default=False, dest='dust_exc')
     parser.add_argument('-ee','--exclude_err', help='Exclude resizing of parallax errors (compared to external catalogues, \
                                                      Arenou et al. 2018) and zero point correction. May be useful for data \
                                                      comparison or application to non Gaia parallaxes (e.g Hipparcos) \
-                                                     (default = False)', action='store_true', default=False,
+                                                     (default = False) (no argument)', action='store_true', default=False,
                                                      dest='err_exc')
 
 
@@ -106,13 +108,21 @@ def main():
         decs = data.iloc[:, args.dec].values
         asts = data.iloc[:, args.ast].values
         names = data.iloc[:, args.name].values
-        # Slice out columns with parameters.
+        # Slice out columns with parameters (according to the column number).
+        
+        if args.zpt_list:
+            print(args.zpt_list)
+        # If zero point list is specified, load zero point from csv file:
+            zpt_data = data.iloc[:, args.zpt_list].values
+        else:
+        # use single zero point for all WR stars.
+            zpt_data = args.zpt
 
         maxr, upper, lower, heights, heights_upper, heights_lower, omega, omega_err, flags = cf.run_dist(pars, parserrs,
                                                                                               phots, ras, decs, asts, names,
                                                                                               wdust= not args.dust_exc,
                                                                                               werr= not args.err_exc,
-                                                                                              md=args.md, zpt=args.zpt,
+                                                                                              md=args.md, zpt_data=zpt_data,
                                                                                               err_sig=args.esig,
                                                                                               plot_image=args.plot_data,
                                                                                               save_distributions=args.save_distribution)
@@ -123,11 +133,17 @@ def main():
                      'Flags for distance':flags,
                      'Distance from plane (|z|) (pc)':heights,
                      '|z| upper bound (pc)':heights_upper,
-                     '|z| lower bound':heights_lower}
+                     '|z| lower bound':heights_lower, 
+                     'Omega (zero point corrected parallax) (mas)':omega}
 
         if not args.err_exc:
-            data_dict.update({'Omega (zero point corrected parallax) (mas)':omega,
-                              'Sigma omega (increased error) (mas)':omega_err})
+            data_dict.update({'Sigma omega (increased error) (mas)':omega_err})
+            # If using expanded uncertainty estimates (i.e getting results for DR2 data), this will include the increased 
+            # errors in the results file.
+            
+        if args.zpt_list:
+             data_dict.update({'Zero points applied (mas)':zpt_data})
+            # If loading in a list of individual zero points from the original data file, include a list of the zero points used in the results file.       
 
         df = pd.DataFrame(data=data_dict, index=names)
         # Turn the results into a dataframe.
