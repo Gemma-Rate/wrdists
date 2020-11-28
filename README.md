@@ -47,9 +47,10 @@ It's also possible to load in the data from a file. Here, instead of entering th
 | WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 |
 
 This code will load data from test.csv and save the distance data into the file test_2.csv at the path specified.  
-```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv``` 
+```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph``` 
 
 The star names are in the first column and so -n is set to zero (python indexing). The parallax is the second column, and so -p has value 1 and so on. 
+The -ph command is included to avoid  loading in the header.
 
 #### Required arguments
 ```
@@ -79,15 +80,43 @@ Also required when loading data from a file:
           program. The input string should be the path to save the distribution data. (default = False). 
 -ed       Include to exclude dust from the prior (use HII regions only), which may be useful to compare the 
           effects of different priors. 
--ee       Include to disregard resizing of parallax errors (compared to external catalogues, Arenou et al. 2018) 
-          and zero point correction. May be useful for data comparison or application to non Gaia parallaxes 
-          (e.g Hipparcos) (default = False).
+-ee       Include to disregard resizing of parallax errors (compared to external catalogues, Arenou et al. 2018) . 
+          Required for Gaia DR3 and later data releases. May also be useful for data comparison and application to non Gaia parallaxes 
+          (e.g Hipparcos) and later Gaia data releases after DR2 (default = False).
 ```
 For data loading: 
 ```
 -ph       Include if the file input contains a header, to avoid issues with loading data. 
 -dmt      Specify a delimiter for the input file (default = ',').
+-zpt_list  Include if loading in a column of zero point data from a file.
 ```
+
+### Use for DR3 and later releases
+
+The defaults of this code (e.g the zero point value and the application of inflated uncertainties) are valid for DR2. To use this code for DR3 and later releases, 
+we can disregard the adjustment for underestimated uncertainties by setting -ee  in the command line argument. We should also update the zero point, -zpt.
+The global value for this in Gaia DR3 is (at the time of release) -0.017mas.
+
+However, for distant objects with small parallaxes,  a change in the zero point can have a large effect on the resulting distance. As DR3 results will come with a recipe to 
+calculate the zero point,  it may be worth calculating the zero point individually for each star that you wish to obtain the distance for, rather than using the global value. 
+ 
+For example, if the DR3 zero point for WR1 is found to be 0.015 , a DR3 calculation for WR1 would look like:
+```wrdists -p 0.285 -pe 0.032 -g 9.79 -ra 10.87 -dec 64.76 -ast 0 -n WR1 -ee -zpt 0.015``` 
+ 
+(though replacing the DR2  parallax, position and other parameters with DR3 data).  The zero point and expanded uncertainties can also be changed if 
+loading data from a file. Using the same test.csv above (and again considering DR3 data), we can either apply the same zero point (e.g -0.017) to all the data:
+```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph -zpt -0.017 -ee```
+
+Alternatively, i f we wish to apply a different zero point to each star,  we can add a column to the file, like below:
+| WR number | Gaia parallax (mas) | Parallax err (mas) | G (mag) | Gaia RA (deg) | Gaia DEC (deg) | Astrometric excess noise (mas) | Zero Point (mas)|
+|:---------:|:-------------------:|:------------------:|:-------:|:-------------:|:--------------:|:------------------------------:|:-------------------:|
+| WR1       | 0.285               | 0.032              | 9.79    | 10.868        |  64.760        |            0                   | -0.032             |
+| WR2       |                     |                    | 11.00   | 16.346        |  60.422        |           0.27                 | -0.029             |
+| WR3       | 0.313               | 0.041              | 10.58   | 24.732        |  58.156        |           0.10                 | -0.025             |
+| WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 | -0.017             |
+
+This can be loaded and run with the similar syntax to above:
+```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph -ee -zpt_list 7``` 
 
 ### Imported into another program
 
@@ -98,6 +127,19 @@ Import as ```wrdists.module```. E.g, to access the bayesian distribution class, 
 Python 3.0 or newer. Matplotlib, Pandas, Astropy and Numpy modules.
 
 ## Attribution and acknowledgements
+
 If you have found this code useful, then please cite it as [Rate & Crowther, 2020 (MNRAS, 493, 1512)](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.1512R/abstract).
 
 This work has made use of data from the European Space Agency (ESA) mission Gaia (https://www.cosmos.esa.int/gaia), processed by the Gaia Data Processing and Analysis Consortium (DPAC, https://www.cosmos.esa.int/web/gaia/dpac/consortium). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the Gaia Multilateral Agreement.
+
+## Update history
+
+27/11/2020: Update to version 1.1 with the following major changes:
+                     - The run_dist_single function in collated_functions.py has been updated to apply the zero point correction independent to the inflated DR2 parallaxes.
+                       Additionally, a bug preventing the zero point from being properly updated has been corrected
+                     - The run_dist function in collated_functions.py has been updated to allow for a list of zero points to be used. Additionally, a bug preventing the zero point 
+                        from being updated has been corrected
+                     - The console_access.py function has been updated to include the  -zpt_list argument (allowing a user to apply a list of zero points from a file) and propagate
+                        this to later functions. The zero point corrected parallax and list of zero points (when used) are now also saved in the output file.
+                     - This Readme has been updated to include sections on using the code with DR3 (and later) data and to list the update history.
+                        
