@@ -84,6 +84,7 @@ def to_decimal(ra, dec, pres=2):
     for r, d in zip(ra, dec):
         try:
             r, d = str(r, 'utf-8'), str(d, 'utf-8')
+            # Python 2 byes conversion to string.
         except:
             pass
         try:
@@ -268,7 +269,7 @@ def create_cs(ra, dec):
     return ra_new, dec_new, cs_list
 
 def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True, 
-             md=300, zpt=-0.029, err_sig=0.68, plot_image=False, save_distributions=False):
+             md=300, zpt_data=-0.029, err_sig=0.68, plot_image=False, save_distributions=False):
     """
     Get all distances for a list of objects using bayesian method.
 
@@ -288,12 +289,16 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
         Astrometric excess noise.    
     md : int
         Minimum distance for the prior in pc. Default=300pc.
-    zpt : float
+    zpt_data : float or list
         Apply zero point correction to parallaxes. Default=-0.029mas.
     err_sig : float (0-1)
         Specify the region of credible interval. Default=0.68, 1 sigma (e.g alternative 0.95=2 sigma).
     plot_image : bool
         Plot the output image distribution of the prior and posterior.
+    wdust : bool
+        Include the dust extinction in the prior.
+    werr : bool
+        Include an increase in the parallax error (used for DR2 data only).
         
     Returns
     ----------
@@ -306,18 +311,27 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
     flags : list
         Flags applied to data. 
     """
-    
+       
     max_dist, upper, lower, heights, heights_upper, heights_lower, flags, omega, omega_err = [], [], [], [], [], [], \
                                                                                              [], [], []
 
     for i in range(len(pars)):
+    
+        try: 
+        # Applying individual different zero points to each WR star.
+            len(zpt_data)
+            zpt = zpt_data[i]
+        except TypeError:
+        # Single zero point to apply to all data.
+            zpt = zpt_data
 
         maximum_r, interval, height, height_interval, flagstr, fail, distribution = run_dist_single(pars[i], \
                                                      parserr[i], phots[i],\
                                                      ra[i], dec[i], ast[i], 
-                                                     name[i], wdust=wdust,
+                                                     name[i], wdust=wdust, zpt=zpt,
                                                      werr=werr, md=md,
                                                      plot_image=plot_image)
+        # Calculate the distance for each individual star in the list.
         max_dist.append(maximum_r)
         upper.append(interval[1]), lower.append(interval[0])
         flags.append(flagstr)
@@ -334,9 +348,11 @@ def run_dist(pars, parserr, phots, ra, dec, ast, name, wdust=True, werr=True,
             df.to_csv(fname, index=False)
 
         if werr:
-            omega.append(distribution.dpt*1e3)
             omega_err.append(distribution.err*1e3)
+            # Save updated parallax error if it is calculated.
 
+        omega.append(distribution.dpt*1e3)
+        # Always save zero point corrected parallax.
 
     return np.array(max_dist), np.array(upper), np.array(lower), np.array(heights), np.array(heights_upper), \
            np.array(heights_lower), omega, omega_err, flags
@@ -378,6 +394,10 @@ def run_dist_single(pars, parserr, phots, ra, dec, ast, name, r_num=15000,
         Percentage coverage of credible intervals (e.g default 0.68 is one sigma, 0.95 is two sigma etc).
     plot_image : boolean
         Plot distribution of likelihood, prior and posterior, together with most likely distance and credible intervals.
+    wdust : bool
+        Include the dust extinction in the prior.
+    werr : bool
+        Include an increase in the parallax error (used for DR2 data only).
         
     Returns
     ----------
@@ -397,7 +417,7 @@ def run_dist_single(pars, parserr, phots, ra, dec, ast, name, r_num=15000,
     # Set up distribution of distances r in pc. 
     
     fail = ' '
-    # Empty fail.
+    # Empty fail to start (this will be added to at the end).
 
     try:
 
@@ -405,16 +425,16 @@ def run_dist_single(pars, parserr, phots, ra, dec, ast, name, r_num=15000,
 
         dist = bc.Distribution(pars, parserr, r)
         # Create distribution object. 
-        if name == 'WR11':
-            # Adjust for Hipparcos distance for WR11:
-            dist.dpt, dist.err = dist.dpt*1e-3, dist.err*1e-3
-        elif werr == True:
-            dist.correct_gaia(phots, uwu=False, zpt=-0.029)   
+        if werr == True:
+            dist.correct_gaia(phots, uwu=False, zpt=zpt)   
             # Correct WR distance, with inflated Gaia errors.
         elif werr == False:
+            dist.dpt = dist.dpt - zpt
+            # Apply the zero point.
             dist.dpt, dist.err = dist.dpt*1e-3, \
-                                        dist.err*1e-3
-            # Correct WR distance, without inflated errors. 
+                                         dist.err*1e-3
+            # Apply the zero point and adjust the mas to arcsec, without inflated errors 
+            # (which should be used for DR2 only). 
 
         """Calculate posterior"""
 
