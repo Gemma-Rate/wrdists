@@ -58,7 +58,7 @@ It's also possible to load in the data from a file. Here, instead of entering th
 | WR3       | 0.313               | 0.041              | 10.58   | 24.732        |  58.156        |           0.10                 |
 | WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 |
 
-This code will load data from test.csv and save the distance data into the file test_2.csv at the path specified.  
+This code will load data from test.csv and save the distance data into the file test2.csv at the path specified.  
 ```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph``` 
 
 The star names are in the first column and so -n is set to zero (python indexing). The parallax is the second column, and so -p has value 1 and so on. 
