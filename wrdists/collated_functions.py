@@ -46,8 +46,6 @@ def from_decimal(ra, dec):
 
     if dec[0].isnumeric():
         dec = '+'+dec
-    elif dec[0]=='-':
-        dec = dec.replace('-', '$-$')
     # Add + to the front of declination coordinates (for catalogue format).
 
     return ra, dec
@@ -509,52 +507,6 @@ def run_dist_single(pars, parserr, phots, ra, dec, ast, name, r_num=15000,
             height_interval = [np.nan, np.nan]
 
     return maximum_r, interval, height, height_interval, flagstr, fail, dist
-
-def process_load(data):
-    """
-    Load in data from file in numeric format  .  
-    
-    Parameters
-    ----------
-    data : pandas series
-        Pandas series from dataframe.       
-        
-    Returns
-    ----------
-    data_num : numpy array
-        Data in numpy float 64 array. 
-    """
-
-    data_vals_nans = data.replace(to_replace=' ', value=np.nan).values
-    data_num = pd.to_numeric(data_vals_nans)
-
-    return data_num
-
-def err_matrix(upper, lower, dist):
-    """
-    Get upper and lower errors suitable for plotting with matplotlib errorbar.     
-    
-    Parameters
-    ----------
-    upper : numpy array
-        Upper error bars. 
-    lower : numpy array
-        Lower error bars      
-    dist : numpy array
-        Measured value (e.g distance or height)
-        
-    Returns
-    ----------
-    err_array : 2D numpy array
-        2D data array with errors. 
-    """
-
-    max_68 = upper-dist
-    min_68 = dist-lower
-    err_array = np.stack((min_68, max_68))
-
-    return err_array
-
 
 def gaia_flag(par, parerr, ast):
     """

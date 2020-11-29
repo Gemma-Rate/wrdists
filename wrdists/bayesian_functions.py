@@ -245,7 +245,7 @@ class Distribution(object):
         # Correct parallax data point for global zero point error.
 
         if uwu:
-            self.err = self.err * uwu
+            self.err = self.err * uwu * 1e-3
             # Apply user supplied reweighting.
         else:
             # Apply function for weighting error.

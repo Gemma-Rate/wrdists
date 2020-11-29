@@ -1,6 +1,6 @@
 """Test cases for bayesian calculation class"""
 
-import bayesian_cal as bc
+import wrdists.bayesian_functions as bc
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -90,30 +90,6 @@ class DistribTestCase(unittest.TestCase):
         self.assertEqual(np.around(molh, decimals=4), 0.4333)
         # Molecular gas. 
 
-        # Plot vertical graph:
-        rg0, z = 0, np.linspace(-800, 800, 1000)  
-        d0, mol0, atom0, molh0, atomh0 = test_dist.total_dust(rg0, z) 
-        rg8 = 8000 
-        d8, mol8, atom8, molh8, atomh8 = test_dist.total_dust(rg8, z)        
-        plt.plot(z, molh0, 'r-', label='Molecular gas at 0pc')
-        plt.plot(z, atomh0, 'r--', label='Atomic gas at 0pc')
-        plt.plot(z, molh8, 'k-', label='Molecular gas at 8kpc')
-        plt.plot(z, atomh8, 'k--', label='Molecular gas at 8kpc')
-        plt.xlim([-800, 800])
-        plt.legend()
-        plt.ylabel('Fraction of midplane density')
-        plt.xlabel('Distance from Midplane (pc)')
-        plt.show()
-
-        # Plot horizontal graph:
-        rg, z = np.linspace(0, 14000, 14000), 0
-        d, mol, atom, molh, atomh = test_dist.total_dust(rg, z)
-        plt.semilogy(rg, mol, 'k-', label='Molecular gas')
-        plt.semilogy(rg, atom, 'k--', label='Atomic gas')
-        plt.ylabel(r'Number density (cm$^{-3}$)')
-        plt.xlabel('Distance from galactic centre (pc)')
-        plt.show()
-
     def test_errs(self):
         """
         Test process to generate 68% credible intervals
@@ -175,7 +151,7 @@ class DistribTestCase(unittest.TestCase):
         av, delta_p, dtot, dmol = wr_dist.dust_model(l, b)
         # Dust model. 
 
-        m, all_modes, normedg, maximum_r, Z = wr_dist.wr_prior(mu=mu, sigma=sig, delta=delta_p)
+        normedg, maximum_r = wr_dist.apply_wr_prior(mu=mu, sigma=sig, delta=delta_p)
         # Get unnormalised posterior from gaussian prior. 
 
         self.assertEqual(np.around(maximum_r/1e3, decimals=2), 2.00)

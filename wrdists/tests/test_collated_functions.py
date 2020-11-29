@@ -8,10 +8,21 @@ class WrapTestCase(unittest.TestCase):
     """
     Test key functions in wrapper_functions.py
     """
+    
+    def test_from_decimal(self):
+       """
+       Test from_decimal function.
+       """
+       ra, dec = 243.1542, -46.6269
+       ra_new, dec_new = cf.from_decimal(ra, dec)
+
+       self.assertEqual(ra_new, '16 12 37.01')
+       self.assertEqual(dec_new, '-46 37 36.8') 
+       
 
     def test_to_decimal(self):
         """
-        Test to_decimal. 
+        Test to_decimal function. 
         """
         ra, dec = '00 43 28.40', '+64 45 35.40' 
         # RA and DEC for WR1 in hms, dms. 
@@ -83,19 +94,40 @@ class WrapTestCase(unittest.TestCase):
         par, parerr, ast = 0.671, 0.040, 0
         f = cf.gaia_flag(par, parerr, ast)
         self.assertEqual(f, ' g ')    
-
-
-    def test_most_recent(self):
-        """
-        Test obtaining most recent spectral type.
-        """
         
-        wr_type = 'WC4; WC5; WC4pd+O9.6'
-        ref = 'SS90; CDB98; WH96'
-        # Information for WR19. 
-        wrecent = cf.most_recent(wr_type, ref)
+        
+    def test_run_dist_single(self):
+        """
+        Test run_dist_single function.
+        """
+        maximum_r, interval, height, height_interval, flagstr, fail, dist = cf.run_dist_single(0.471, 0.014599, 0, 180, 0, 0, 'test', r_num=15000, 
+                                                                                                                                      wdust=True, werr=True, md=300, zpt=-0.029,
+                                                                                                                                      err_sig=0.68, plot_image=False)
+        # Test all the parameters being on.
+        self.assertEqual(np.around(maximum_r/1e3, decimals=2), 2.00)            
+        self.assertEqual(flagstr, ' g ')       
+                   
+        maximum_r, interval, height, height_interval, flagstr, fail, dist = cf.run_dist_single(0.471, 0.02, 0, 180, 0, 0, 'test', r_num=15000, 
+                                                                                                                                      wdust=True, werr=False, md=300, zpt=-0.029,
+                                                                                                                                      err_sig=0.68, plot_image=False)
+        # Test with no error increase.
+        self.assertEqual(np.around(maximum_r/1e3, decimals=2), 2.00)            
+        self.assertEqual(flagstr, ' g ')  
 
-        self.assertEqual(wrecent, 'WC5')
+
+        maximum_r, interval, height, height_interval, flagstr, fail, dist = cf.run_dist_single(0.5, 0.02, 0, 180, 0, 0, 'test', r_num=15000, 
+                                                                                                                                      wdust=True, werr=True, md=300, zpt=0,
+                                                                                                                                      err_sig=0.68, plot_image=False)
+        # Test with no zero point.
+        self.assertEqual(np.around(maximum_r/1e3, decimals=2), 2.00)            
+        self.assertEqual(flagstr, ' g ')         
+
+        maximum_r, interval, height, height_interval, flagstr, fail, dist = cf.run_dist_single(0.471, 0.02, 0, 180, 0, 0, 'test', r_num=15000, 
+                                                                                                                                      wdust=True, werr=True, md=300, zpt=-0.029,
+                                                                                                                                      err_sig=0.0, plot_image=False)
+        # Test with no error interval.
+        self.assertEqual(np.around(interval[0]/1e3, decimals=2), 2.00)            
+        self.assertEqual(np.around(interval[1]/1e3, decimals=2), 2.00)            
 
 
 if __name__ == '__main__':
