@@ -7,6 +7,18 @@ Further methodology information is available our in publication outlined above.
 
 The code can be accessed either through the command line, or imported into your own python program.
 
+## Contents
+- [Installation](#installation)
+- [Useage](#useage)
+  - [Command line](#command-line)
+    - [Required Arguments](#required-arguments)
+    - [Optional Arguments](#optional-arguments)
+  - [Use for DR3 and later releases](#use-for-dr3-and-later-releases)
+  - [Imported into another program](#imported-into-another-program)
+- [Dependencies](#dependencies)
+- [Attribution and acknowledgements](#attribution-and-acknowledgements)
+- [Update history](#update-history)
+
 ## Installation
 
 To install, clone or download the zip file containing the code into your python or virtual environment Lib folder. In the wrdists directory that is then created (which may be wrdists-master) and contains setup.py, run
