@@ -12,6 +12,6 @@ setuptools.setup(
     entry_points ={'console_scripts': ['wrdists = wrdists.console_access:main']},
     version='1.1',
     license='MIT',
-    description='Calculates Galactic WR distances from Gaia DR2 parallaxes',
+    description='Calculates Galactic WR distances from Gaia parallaxes',
     long_description=open('README.md').read(),
 )
