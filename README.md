@@ -147,7 +147,7 @@ This work has made use of data from the European Space Agency (ESA) mission Gaia
 28/11/2020: Update to version 1.1 with the following major changes:  
 
 - The run_dist_single function in collated_functions.py has been updated to apply the zero point correction independent to the inflated DR2 parallaxes.
-  Additionally, a bug preventing the zero point from being properly incorporated into the calculation has been corrected.  
+  Additionally, a bug preventing the zero point from being properly updated if modified by the user via the -zpt argument has been corrected.  
 - The run_dist function in collated_functions.py has been updated to allow for a list of zero points to be used. Additionally, a bug preventing the zero point 
   from being updated has been corrected.  
 - The console_access function has been updated to include the -zpt_list argument (allowing a user to apply a list of zero points from a file) and propagate
