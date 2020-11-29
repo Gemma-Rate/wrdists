@@ -141,7 +141,7 @@ This work has made use of data from the European Space Agency (ESA) mission Gaia
                         from being updated has been corrected.  
                      - The console_access.py function has been updated to include the  -zpt_list argument (allowing a user to apply a list of zero points from a file) and propagate
                         this to later functions. The zero point corrected parallax and list of zero points (when used) are now also saved in the output file.  
-                     - This Readme has been updated to include sections on using the code with DR3 (and later) data and to list the update history. 
+                     - This Readme has been updated to include sections on using the code with DR3 (and later) data and to list the update history.   
                      - Added further updates to the test modules.  
                      - Removed extra functions from collated_functions.py.  
                         
