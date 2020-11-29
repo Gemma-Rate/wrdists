@@ -107,7 +107,7 @@ For example, if the DR3 zero point for WR1 is found to be 0.015 , a DR3 calculat
 loading data from a file. Using the same test.csv above (and again considering DR3 data), we can either apply the same zero point (e.g -0.017) to all the data:  
 ```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph -zpt -0.017 -ee```
 
-Alternatively, i f we wish to apply a different zero point to each star,  we can add a column to the file, like below:
+Alternatively, if we wish to apply a different zero point to each star,  we can add a column to the file, like below:
 | WR number | Gaia parallax (mas) | Parallax err (mas) | G (mag) | Gaia RA (deg) | Gaia DEC (deg) | Astrometric excess noise (mas) | Zero Point (mas)|
 |:---------:|:-------------------:|:------------------:|:-------:|:-------------:|:--------------:|:------------------------------:|:-------------------:|
 | WR1       | 0.285               | 0.032              | 9.79    | 10.868        |  64.760        |            0                   | -0.032             |
@@ -115,7 +115,7 @@ Alternatively, i f we wish to apply a different zero point to each star,  we can
 | WR3       | 0.313               | 0.041              | 10.58   | 24.732        |  58.156        |           0.10                 | -0.025             |
 | WR4       | 0.229               | 0.041              | 9.68    | 40.300        |  56.730        |           0.06                 | -0.017             |
 
-This can be loaded and run with the similar syntax to above:   
+This can be loaded and run with similar syntax to above:   
 ```wrdists -p 1 -pe 2 -g 3 -ra 4 -dec 5 -ast 6 -n 0 -fin \directorypath\test.csv -fout \directorypath\test2.csv -ph -ee -zpt_list 7``` 
 
 ### Imported into another program
